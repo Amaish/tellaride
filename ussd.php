@@ -37,6 +37,9 @@ if(!empty($_POST)){
             if($userResponse=="1" || $userResponse==""){
                 $response = AddDriverNumber();             
             }
+            else{
+                $response = "END Something went wrong\n";
+            }
             break;
             case 2:
             $sqlLev3 = "UPDATE `session_levels` SET `level` = '3' WHERE `phonenumber` = '$phoneNumber'";
