@@ -11,10 +11,6 @@ if(!empty($_POST)){
     $userResponse = trim(END($textArray));
     $date           = date('d/m/Y');
     $dbFetch = array('phonenumber'=>$phoneNumber);
-    // if (sizeof($textArray==2)){
-    //     $drivernum=$userResponse;
-    //     echo "END $drivernum\n";
-    // }
     //check if the pnone number is registered as an admin
     if(returnExists('admin', $dbFetch) > 0){
         //fetch admin level
@@ -38,21 +34,21 @@ if(!empty($_POST)){
             case 1:
             $sqlLev2 = "UPDATE `session_levels` SET `level` = '2' WHERE `phonenumber` = '$phoneNumber'";
             $conn->query($sqlLev2);
-            if($userResponse=="1"){
+            if($userResponse=="1" || $userResponse==""){
                 $response = AddDriverNumber();             
             }
             break;
             case 2:
             $sqlLev3 = "UPDATE `session_levels` SET `level` = '3' WHERE `phonenumber` = '$phoneNumber'";
             $conn->query($sqlLev3);
-            $sqldrvnumber = "INSERT INTO `drivers` (`phonenumber`) VALUES ('$userResponse')";
+            $sqldrvnumber = "INSERT INTO `drivers` (`phonenumber`,`session_id`) VALUES ('$userResponse','$sessionId')";
             $conn->query($sqldrvnumber);
             $response = AddDriverName();
             break;
             case 3:
             $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
             $conn->query($sqlLev0);
-            $sqldrvname = "UPDATE `drivers` SET `name` = '$userResponse'WHERE `phonenumber` = '$drivernum'";
+            $sqldrvname = "UPDATE `drivers` SET `name` = '$userResponse'WHERE `session_id` = '$sessionId'";
             $conn->query($sqldrvname);
             $response = "END success";
             break;
