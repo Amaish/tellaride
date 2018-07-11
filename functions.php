@@ -76,4 +76,9 @@ function riderWelcomeScreen()
     $response .= "2. Exit";
     return $response;
 }
+function deleteDriverMenu()
+{
+    $response  = "CON Enter driver number\n";
+    return $response;
+}
 ?>
