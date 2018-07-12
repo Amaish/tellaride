@@ -11,6 +11,7 @@ if(!empty($_POST)){
     $userResponse  = trim(END($textArray));
     $date          = date('d/m/Y');
     $dbFetch       = array('phonenumber'=>$phoneNumber);
+    $drvFetch      = array('session_id'=>$sessionId);
     //check if the pnone number is registered as an admin
     if(returnExists('admin', $dbFetch) > 0){
         //fetch admin level
@@ -66,13 +67,27 @@ if(!empty($_POST)){
             $conn->query($sqlLev0);
             $sqldrvname = "UPDATE `drivers` SET `name` = '$userResponse'WHERE `session_id` = '$sessionId'";
             $conn->query($sqldrvname);
+            $drvNum   = getByValue('drivers','phonenumber',$drvFetch);
+            $drvName  = getByValue('drivers','name',$drvFetch);
+            $drvId    = getByValue('drivers','id',$drvFetch);
+            $adminMsg = "You have successfully added a driver\n Name: $drvName\n Tel: $drvNum\n Ref ID: $drvId";
+            $drvMsg   = "You have been added to Tapps Ride as a driver Ref ID: $drvId";
+            sendMessage($phoneNumber,$adminMsg);
+            sendMessage($drvNum,$drvMsg);
             $response = "END Add success";
             break;
             case 4:
-            $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+            $drvdel = array('phonenumber'=>$userResponse);
+            $drvNum   = getByValue('drivers','phonenumber',$drvdel);
+            $drvName  = getByValue('drivers','name',$drvdel);
+            $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
             $conn->query($sqlLev0);
             $sqldeldrv = "DELETE FROM `drivers` WHERE `phonenumber` = '$userResponse'";
             $conn->query($sqldeldrv);
+            $adminMsg = "You have successfully deleted a driver\n Name: $drvName\n Tel: $drvNum";
+            $drvMsg   = "You have been Deleted from Tapps Ride as a driver";
+            sendMessage($phoneNumber,$adminMsg);
+            sendMessage($drvNum,$drvMsg);
             $response = "END Delete success";
             break;
             default:
