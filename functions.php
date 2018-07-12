@@ -81,4 +81,22 @@ function deleteDriverMenu()
     $response  = "CON Enter driver number\n";
     return $response;
 }
+function sendMessageLive($phoneNumber,$message)
+{
+    require_once('AfricasTalkingGateway.php');
+    $username   = "amaina";
+    $apikey     = "03591223d8bb42724274df7525e35a0e486f0067e197cdde5b03761851a4bd90";
+    $recipients = $phoneNumber;
+    $message    = $message;
+    $from = "20880";
+    $gateway    = new AfricasTalkingGateway($username, $apikey);
+    try 
+    {
+        $results = $gateway->sendMessage($recipients, $message, $from);
+    }
+        catch ( AfricasTalkingGatewayException $e )
+    {
+        echo "END Encountered an error while sending: ".$e->getMessage();
+    }
+}
 ?>
