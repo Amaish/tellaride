@@ -19,6 +19,8 @@ if(!empty($_POST)){
             $level      = getByValue('session_levels','level',$dbFetch);
         }
         else{
+            $sqldrvLevelset = "INSERT INTO `session_levels` (`phonenumber`,`session_id`,`level`) VALUES ('$phoneNumber','$sessionId','0')";
+            $conn->query($sqldrvLevelset);
             $level      = 0;
         }
         switch ($level) {
@@ -48,7 +50,8 @@ if(!empty($_POST)){
             }
             break;
             case 2:
-            $querydrv = array('phonenumber'=>$userResponse);
+            $formated_phone = "+254".substr($userResponse, -9);
+            $querydrv = array('phonenumber'=>$formated_phone);
             if(returnExists('drivers', $querydrv) > 0){
                 $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                 $conn->query($sqlLev0);
@@ -57,7 +60,7 @@ if(!empty($_POST)){
             else{
                 $sqlLev3 = "UPDATE `session_levels` SET `level` = '3' WHERE `phonenumber` = '$phoneNumber'";
                 $conn->query($sqlLev3);
-                $sqldrvnumber = "INSERT INTO `drivers` (`phonenumber`,`session_id`) VALUES ('$userResponse','$sessionId')";
+                $sqldrvnumber = "INSERT INTO `drivers` (`phonenumber`,`session_id`) VALUES ('$formated_phone','$sessionId')";
                 $conn->query($sqldrvnumber);
                 $response = AddDriverName();
             }
@@ -77,12 +80,13 @@ if(!empty($_POST)){
             $response = "END Add success";
             break;
             case 4:
-            $drvdel = array('phonenumber'=>$userResponse);
+            $formated_phone = "+254".substr($userResponse, -9);
+            $drvdel = array('phonenumber'=>$formated_phone);
             $drvNum   = getByValue('drivers','phonenumber',$drvdel);
             $drvName  = getByValue('drivers','name',$drvdel);
             $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
             $conn->query($sqlLev0);
-            $sqldeldrv = "DELETE FROM `drivers` WHERE `phonenumber` = '$userResponse'";
+            $sqldeldrv = "DELETE FROM `drivers` WHERE `phonenumber` = '$formated_phone'";
             $conn->query($sqldeldrv);
             $adminMsg = "You have successfully deleted a driver\n Name: $drvName\n Tel: $drvNum";
             $drvMsg   = "You have been Deleted from Tapps Ride as a driver";
@@ -95,25 +99,158 @@ if(!empty($_POST)){
             break;
         }
     }
+    //check if it is a driver
     else if (returnExists('drivers', $dbFetch) > 0){
         if(returnExists('session_levels', $dbFetch) > 0){
             $level      = getByValue('session_levels','level',$dbFetch);
         }
         else{
+            $sqldrvLevelset = "INSERT INTO `session_levels` (`phonenumber`,`session_id`,`level`) VALUES ('$phoneNumber','$sessionId','0')";
+            $conn->query($sqldrvLevelset);
             $level      = 0;
         }
         switch ($level) {
             case 0:
-            $response;
+            $sqlLev1  = "UPDATE `session_levels` SET `level` = '1' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLev1);
+            $drvName  = getByValue('drivers','name',$dbFetch);
+            $response = driverWelcomeScreen($drvName);
+            break;
+            case 1:
+            if ($userResponse=="1"){
+                $sqlLev2  = "UPDATE `session_levels` SET `level` = '2' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev2);
+                $response = driverEditLocation();
+            }
+            else if ($userResponse=="2"){
+                $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev0);
+                $tripstatus = getByValue('drivers','status',$dbFetch);
+                if ($tripstatus== "0"){
+                    $sqlstart  = "UPDATE `drivers` SET `status` = '1' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlstart);
+                    $response = "END trip has started";
+                }
+                else{
+                    $response = "END You are already on another trip";
+                }
+            }
+            else if ($userResponse=="3"){
+                $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev0);
+                $tripstatus = getByValue('drivers','status',$dbFetch);
+                if ($tripstatus== "0"){
+                    $response = "END You have no active trip";
+                }
+                else{
+                    $sqlstop  = "UPDATE `drivers` SET `status` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlstop);
+                    $response = "END Your trip has ended";
+                }
+            }
+            else if ($userResponse=="4"){
+                $sqlLev3  = "UPDATE `session_levels` SET `level` = '3' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev3);
+                $response = driverEditStatus();
+            }
+            else if ($userResponse=="5"){
+                $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev0);
+                $location = getByValue('drivers','location',$dbFetch);
+                $response = "END Your current location is $location";
+            }
+            else if ($userResponse=="6"){
+                $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev0);
+                $response = "END Thank-you.";
+            }
+            else{
+                $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev0);
+                $response = "END Invalid entry try again.";
+            }
+            break;
+            case 2:
+            $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLev0);
+            $sqlLoc  = "UPDATE `drivers` SET `location` = '$userResponse' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLoc);
+            $response  = "END Your location has been edited\n";
+            $response .= "Your new location is $userResponse";
+            break;
+            case 3:
+            $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLev0);
+            if ($userResponse=="1"){
+                $sqlstatus1  = "UPDATE `drivers` SET `status` = '1' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlstatus1);
+                $response = "END You are now offline";
+            }
+            else if ($userResponse=="2"){
+                $sqlstatus0  = "UPDATE `drivers` SET `status` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlstatus0);
+                $response = "END You are now online";
+            }
             break;
             default:
-            $response = "END Oops, something isn't right... \n";
+            $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLev0);
+            $response = "END Oops, something isn't right try again... \n";
             break;
         }
     }
-    
+    //else it is a rider
     else{
-        $response = riderWelcomeScreen();
+        if(returnExists('session_levels', $dbFetch) > 0){
+            $level      = getByValue('session_levels','level',$dbFetch);
+        }
+        else{
+            $sqldrvLevelset = "INSERT INTO `session_levels` (`phonenumber`,`session_id`,`level`) VALUES ('$phoneNumber','$sessionId','0')";
+            $conn->query($sqldrvLevelset);
+            $level      = 0;
+        }
+        switch ($level) {
+            case 0:
+            $sqlLev1  = "UPDATE `session_levels` SET `level` = '1' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLev1);
+            $response = riderWelcomeScreen();
+            break;
+            case 1:
+            if ($userResponse=="1"){
+                $sqlLev2  = "UPDATE `session_levels` SET `level` = '2' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev2);
+                $response = riderLocationScreen();
+            }
+            else if ($userResponse=="2"){
+                $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev0);
+                $response = "END Thank-you for choosing Tapps Ride goodbye.";
+            }
+            else{
+                $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev0);
+                $response = "END Invalid entry try again.";
+            }
+            break;
+            case 2:
+            $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLev0);
+            $args = array('status'=>'0');
+            $driverLocations=getManyByValue('drivers','location',$args);
+            $driverDetails = closestDriver($userResponse,$driverLocations);
+            $distance = $driverDetails[0];
+            $location = $driverDetails[1];
+            $phone    = $driverDetails[2];
+            $response = "END You are $distance from the closest driver\n";
+            $response.= "Driver location $location\n";
+            $response.= "Driver number $phone\n";
+            break;
+            default:
+            $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+            $conn->query($sqlLev0);
+            $response = "END Something isn't right try again.";
+            break;
+        }
     }
 
     header('Content-type: text/plain');
