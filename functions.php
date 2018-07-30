@@ -38,7 +38,7 @@ function getManyByValue($table, $column, $arguments)
     global $conn;
     $databack     = "";
     $appendSearch = formSearchString($arguments);
-    $formedQuery  = "SELECT * FROM $table WHERE " . $appendSearch . " ORDER BY id DESC";
+    $formedQuery  = "SELECT * FROM $table WHERE " . $appendSearch . " ORDER BY trips ASC";
     $executeQuery = mysqli_query($conn, "$formedQuery");
     if (mysqli_num_rows($executeQuery) > 0) 
     {
@@ -90,12 +90,19 @@ function sendMessage($phoneNumber,$message)
         echo "END Encountered an error while sending: ".$e->getMessage();
     }
 }
+function exitUssd()
+{
+    $response = "END Thank-you for choosing Tapps Ride goodbye.";
+    return $response;
+}
 function AdminWelcomeScreen()
 {
     $response  = "CON Welcome to Tapps Ride\n";
     $response .= "Please choose an option\n";
     $response .= "1. Add driver\n";
-    $response .= "2. Delete driver";
+    $response .= "2. Delete driver\n";
+    $response .= "3. Update password\n";
+    $response .= "4. Exit";
     return $response;
 }
 function AddDriverName()
@@ -111,6 +118,16 @@ function AddDriverNumber()
 function deleteDriverMenu()
 {
     $response  = "CON Enter driver number\n";
+    return $response;
+}
+function AdminPasswordScreen()
+{
+    $response = "CON Enter a password\n";
+    return $response;
+}
+function AdminNameScreen()
+{
+    $response = "CON Enter your name\n";
     return $response;
 }
 function driverWelcomeScreen($name)//edit for current location
@@ -148,6 +165,19 @@ function riderLocationScreen()
 {
     $response  = "CON Enter location\n";
     return $response;
+}
+function minTripsnum($tripsArgs){
+    $numTrips = array();
+    $tripArray = array();
+    $drivernums = getManyByValue('drivers', 'phonenumber', $tripsArgs);
+    foreach($drivernums as $number){
+        $tripsCount = array('phonenumber'=>$number);
+        $trips = getByValue('drivers','trips',$tripsCount);
+        array_push($tripArray, $trips);
+        $numTrips [$trips]=$number;
+    }
+    $minTrip = min($tripArray);
+    return $numTrips[$minTrip];
 }
 function closestDriver($currentLocation, $driverLocation)
 {
@@ -194,8 +224,20 @@ function closestDriver($currentLocation, $driverLocation)
         $result = "$closestDriver KM";
         $locationName = $locName[$closestDrvraw];
         $argsloc = array('location'=>$locationName);
-        $driverNum = getByValue('drivers','phonenumber',$argsloc);
+        $driverNum = minTripsnum($argsloc);
         array_push($response,$result,$locationName,$driverNum);
         return $response;
+}
+function closestDriverDetails($distance,$location,$phone){
+    $response = "CON You are $distance from the closest driver\n";
+    $response.= "Driver location $location\n";
+    $response.= "Driver number $phone\n";
+    $response.= "1. Confirm request\n";
+    $response.= "2. Exit\n";
+    return $response;
+}
+function checkMessages(){
+    $response = "END The driver has been notified check your inbox for details";
+    return $response;
 }
 ?>
