@@ -33,6 +33,27 @@ function getByValue($table, $column, $arguments)
     }
 }
 
+function returnArrayOfAllTable($table,$column, $order)
+{
+    global $conn;
+    $formedQuery     = "SELECT $column FROM $table ORDER BY $order";
+    $run_Array_fetch = mysqli_query($conn, $formedQuery);
+    $getValues       = mysqli_num_rows($run_Array_fetch);
+
+    if($getValues > 0)
+    {
+        $feedback = "";
+        while($array_results = mysqli_fetch_array($run_Array_fetch))
+        {
+            $feedback .= $array_results[$column].",";
+        }
+        return substr($feedback,0, -1);
+    }else{
+        return "0";
+    }
+    
+}
+
 
 
 function getAll($table, $column)
@@ -114,11 +135,15 @@ function sendMessage($phoneNumber,$message)
         echo "END Encountered an error while sending: ".$e->getMessage();
     }
 }
+
+
+
 function exitUssd()
 {
     $response = "END Thank-you for choosing Tapps Ride goodbye.";
     return $response;
 }
+
 function AdminWelcomeScreen()
 {
     $response  = "CON Welcome to Tapps Ride\n";

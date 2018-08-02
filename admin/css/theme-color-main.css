@@ -1,0 +1,41 @@
+
+.nav-scroll .logo span,
+.hero .hero-info .order .botn,
+.skills .numbers .num-info h5,
+.resume .item .date,
+.blog .item .img-post .date,
+.clients .owl-carousel:after,
+.clients h6,
+.contact .info .item .icon
+{
+	color: #3b414c;
+}
+
+.hero .hero-info .order .botn-bg{
+	color: #fff;
+}
+
+
+
+.navbar-default .navbar-nav > li > a:after, 
+.navbar-default .navbar-nav > li > a:before,
+.header .caption .botn:hover,
+.hero .hero-info .order .botn-bg,
+.skills .skills-info .item .skills-progress span,
+.resume .botn,
+.services .item .icon,
+.portfolio .filtering span:after,
+.portfolio .filtering span:before,
+.portfolio .item-img .icon:hover,
+.contact .form input[type="submit"]
+{
+	background: #3b414c;
+}
+
+
+.header .caption .botn:hover,
+.hero .hero-info .order .botn,
+.contact .form input[type="submit"]
+{
+	border-color: #3b414c;
+}
