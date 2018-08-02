@@ -17,6 +17,7 @@ if (!empty($_POST)) {
         'session_id' => $sessionId
     );
     //check if the pnone number is registered as an admin
+    $count = 0;
     if (returnExists('admin', $dbFetch) > 0) {
         //fetch admin level
         if (returnExists('session_levels', $dbFetch) > 0) {
@@ -28,13 +29,23 @@ if (!empty($_POST)) {
         }
         switch ($level) {
             case 0:
-                $response = AdminWelcomeScreen($phoneNumber);        
+                if ($count==0){
+                $count++;   
+                $response = AdminWelcomeScreen();
+                if(!empty($userResponse)){
+                $sqlLev1  = "UPDATE `session_levels` SET `level` = '1' WHERE `phonenumber` = '$phoneNumber'";
+                $conn->query($sqlLev1);  
+                } 
+                }
+                else{
+                    $response = "END Did not choose an option\nPlease try again";
+                }
                 break;
             case 1:
                 if ($userResponse == "1" || $userResponse == "") {
                     $response = AddDriverNumber();
                     if(!empty($userResponse)){
-                        $sqlLev2  = "UPDATE `session_levels` SET `level` = '2' WHERE `phonenumber` = '$phoneNumber'";
+                    $sqlLev2  = "UPDATE `session_levels` SET `level` = '2' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev2);
                     }else{
                         $response = AddDriverNumber();
@@ -42,7 +53,7 @@ if (!empty($_POST)) {
                 } else if ($userResponse == "2") {
                     $response = deleteDriverMenu();
                     if(!empty($userResponse)){
-                        $sqlLev4  = "UPDATE `session_levels` SET `level` = '4' WHERE `phonenumber` = '$phoneNumber'";
+                    $sqlLev4  = "UPDATE `session_levels` SET `level` = '4' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev4);
                     }else{
                         $response = deleteDriverMenu();
@@ -50,7 +61,7 @@ if (!empty($_POST)) {
                 } else if ($userResponse == "3") {
                     $response = AdminPasswordScreen();
                     if(!empty($userResponse)){
-                        $sqlLev5  = "UPDATE `session_levels` SET `level` = '5' WHERE `phonenumber` = '$phoneNumber'";
+                    $sqlLev5  = "UPDATE `session_levels` SET `level` = '5' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev5);
                     }else{
                         $response = AdminPasswordScreen();

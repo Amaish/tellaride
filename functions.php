@@ -119,11 +119,8 @@ function exitUssd()
     $response = "END Thank-you for choosing Tapps Ride goodbye.";
     return $response;
 }
-function AdminWelcomeScreen($phoneNumber)
+function AdminWelcomeScreen()
 {
-    require_once('dbConnector.php');
-    $sqlLev1 = "UPDATE `session_levels` SET `level` = '1' WHERE `phonenumber` = '$phoneNumber'";
-    $conn->query($sqlLev1);
     $response  = "CON Welcome to Tapps Ride\n";
     $response .= "Please choose an option\n";
     $response .= "1. Add driver\n";
