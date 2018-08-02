@@ -55,7 +55,7 @@ class SignInAdmin
                 die('Invalid Phone Number and password');
             }
 
-            $_SESSION['loggedagent'] = $formated_phone;
+            $_SESSION['loggedadmin'] = $formated_phone;
             echo "1";
             
         }

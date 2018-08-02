@@ -33,12 +33,36 @@ function getByValue($table, $column, $arguments)
     }
 }
 
+
+
+function getAll($table, $column)
+{
+    global $conn;
+    $databack     = "";
+    $appendSearch = formSearchString($arguments);
+    $formedQuery  = "SELECT * FROM $table ORDER BY $column DESC";
+    $executeQuery = mysqli_query($conn, "$formedQuery");
+    if (mysqli_num_rows($executeQuery) > 0) 
+    {
+        while ($getValues = mysqli_fetch_array($executeQuery)) 
+        {
+            $databack .= $getValues[$column] . ",";
+        }
+        
+        $columnArray = substr($databack, 0, -1);
+        return explode(",", $columnArray);
+    } else {
+        return "No Data Found";
+    }
+}
+
+
 function getManyByValue($table, $column, $arguments)
 {
     global $conn;
     $databack     = "";
     $appendSearch = formSearchString($arguments);
-    $formedQuery  = "SELECT * FROM $table WHERE " . $appendSearch . " ORDER BY trips ASC";
+    $formedQuery  = "SELECT * FROM $table WHERE ".$appendSearch." ORDER BY trips ASC";
     $executeQuery = mysqli_query($conn, "$formedQuery");
     if (mysqli_num_rows($executeQuery) > 0) 
     {
@@ -95,8 +119,11 @@ function exitUssd()
     $response = "END Thank-you for choosing Tapps Ride goodbye.";
     return $response;
 }
-function AdminWelcomeScreen()
+function AdminWelcomeScreen($phoneNumber)
 {
+    require_once('dbConnector.php');
+    $sqlLev1 = "UPDATE `session_levels` SET `level` = '1' WHERE `phonenumber` = '$phoneNumber'";
+    $conn->query($sqlLev1);
     $response  = "CON Welcome to Tapps Ride\n";
     $response .= "Please choose an option\n";
     $response .= "1. Add driver\n";
@@ -130,14 +157,16 @@ function AdminNameScreen()
     $response = "CON Enter your name\n";
     return $response;
 }
-function driverWelcomeScreen($name)//edit for current location
+function driverWelcomeScreen($name,$table, $column,$numberargs)//edit for current location
 {
     $response  = "CON Welcome $name\n";
     $response .= "Please choose an option\n";
     $response .= "1. Edit location\n";
     $response .= "2. Start trip\n";
     $response .= "3. End trip\n";
-    $response .= "4. Edit status\n";
+    if (getByValue($table, $column, $numberargs)==0){
+        $response .= "4. Edit status\n";//can only edit if at 0.
+    }
     $response .= "5. Check location\n";
     $response .= "6. Exit";
     return $response;
@@ -240,4 +269,20 @@ function checkMessages(){
     $response = "END The driver has been notified check your inbox for details";
     return $response;
 }
+
+// $data = getAll('tablename', 'id');
+
+// <table>
+
+
+
+// foreach($data as $singleId){
+//     $arrayName = array('id' => $singleId);
+
+//     $amount = getByValue('tablename','amount', $arrayName);
+//     $trip = getByValue('tablename','trip', $arrayName);
+
+//     // display
+//     <td><?php echo $amount; 
+
 ?>
