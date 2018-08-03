@@ -16,6 +16,7 @@ if (!empty($_POST)) {
     $drvFetch     = array(
         'session_id' => $sessionId
     );
+    $count = getByValue('session_levels', 'count', $dbFetch);
     //check if the pnone number is registered as an admin
     if (returnExists('admin', $dbFetch) > 0) {
         //fetch admin level
@@ -28,7 +29,6 @@ if (!empty($_POST)) {
         }
         switch ($level) {
             case 0:
-                $count = getByValue('session_levels', 'count', $dbFetch);
                 if ($count==0){
                 if( empty($userResponse)){
                 $response = AdminWelcomeScreen();
@@ -95,9 +95,9 @@ if (!empty($_POST)) {
                     'phonenumber' => $formated_phone
                 );
                 if (empty($userResponse)){
-                    $response = "END Invalid entry";
                     $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);
+                    $response = "END Invalid entry";
                 }
                 else{
                     if (returnExists('drivers', $querydrv) > 0) {
@@ -203,12 +203,33 @@ if (!empty($_POST)) {
         }
         switch ($level) {
             case 0:
-                $sqlLev1 = "UPDATE `session_levels` SET `level` = '1' WHERE `phonenumber` = '$phoneNumber'";
-                $conn->query($sqlLev1);
                 $drvName  = getByValue('drivers', 'name', $dbFetch);
-                $response = driverWelcomeScreen($drvName,'drivers','status',$dbFetch);
+                if ($count==0){
+                    if( empty($userResponse)){
+                        $response = driverWelcomeScreen($drvName,'drivers','status',$dbFetch);
+                        $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                        $conn->query($sqlLev0);
+                        $sqlcount1  = "UPDATE `session_levels` SET `count` = '1' WHERE `phonenumber` = '$phoneNumber'";
+                        $conn->query($sqlcount1);
+                        }
+                        }
+                    else if ($count== 1 && !empty($userResponse)){
+                    $sqlLev1  = "UPDATE `session_levels` SET `level` = '1' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlLev1);
+                    $sqlcount0  = "UPDATE `session_levels` SET `count` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlcount0);
+                    goto drvlvl_1;
+                    }
+                    else{
+                    $response = "END Did not choose an option\nPlease try again";
+                    $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlLev0);
+                    $sqlcount0  = "UPDATE `session_levels` SET `count` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlcount0);
+                    }
                 break;
-            case 1:
+            case 1: //work on case 1 onwards to make sure it never repeats and post empty things to the DB
+            drvlvl_1:
                 if ($userResponse == "1") {
                     $sqlLev2 = "UPDATE `session_levels` SET `level` = '2' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev2);
