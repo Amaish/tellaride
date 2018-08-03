@@ -1,4 +1,4 @@
-<div class="col-xs w modal fade aside aside-md col-md-3" id="subnav">
+<div class="col-xs w modal fade aside aside-md col-md-3 mybg" id="subnav"style="background:#00a848;background: linear-gradient(to bottom right,#00642b, #00a848, #00642b);">
     <div class="row-col light bg">
       <div class="row-row">
         <div class="row-body scrollable hover">
