@@ -23,32 +23,28 @@ function getByValue($table, $column, $arguments)
     $appendSearch = formSearchString($arguments);
     $formedQuery  = "SELECT * FROM $table WHERE $appendSearch";
     $executeQuery = mysqli_query($conn, $formedQuery);
-    if (mysqli_num_rows($executeQuery) > 0) 
-    {
+    if (mysqli_num_rows($executeQuery) > 0) {
         $getValues = mysqli_fetch_array($executeQuery);
         return $getValues[$column];
-    } 
-    else {
+    } else {
         return false;
     }
 }
 
-function returnArrayOfAllTable($table,$column, $order)
+function returnArrayOfAllTable($table, $column, $order)
 {
     global $conn;
     $formedQuery     = "SELECT $column FROM $table ORDER BY $order";
     $run_Array_fetch = mysqli_query($conn, $formedQuery);
     $getValues       = mysqli_num_rows($run_Array_fetch);
-
-    if($getValues > 0)
-    {
+    
+    if ($getValues > 0) {
         $feedback = "";
-        while($array_results = mysqli_fetch_array($run_Array_fetch))
-        {
-            $feedback .= $array_results[$column].",";
+        while ($array_results = mysqli_fetch_array($run_Array_fetch)) {
+            $feedback .= $array_results[$column] . ",";
         }
-        return substr($feedback,0, -1);
-    }else{
+        return substr($feedback, 0, -1);
+    } else {
         return "0";
     }
     
@@ -63,10 +59,8 @@ function getAll($table, $column)
     $appendSearch = formSearchString($arguments);
     $formedQuery  = "SELECT * FROM $table ORDER BY $column DESC";
     $executeQuery = mysqli_query($conn, "$formedQuery");
-    if (mysqli_num_rows($executeQuery) > 0) 
-    {
-        while ($getValues = mysqli_fetch_array($executeQuery)) 
-        {
+    if (mysqli_num_rows($executeQuery) > 0) {
+        while ($getValues = mysqli_fetch_array($executeQuery)) {
             $databack .= $getValues[$column] . ",";
         }
         
@@ -83,12 +77,10 @@ function getManyByValue($table, $column, $arguments)
     global $conn;
     $databack     = "";
     $appendSearch = formSearchString($arguments);
-    $formedQuery  = "SELECT * FROM $table WHERE ".$appendSearch." ORDER BY trips ASC";
+    $formedQuery  = "SELECT * FROM $table WHERE " . $appendSearch . " ORDER BY trips ASC";
     $executeQuery = mysqli_query($conn, "$formedQuery");
-    if (mysqli_num_rows($executeQuery) > 0) 
-    {
-        while ($getValues = mysqli_fetch_array($executeQuery)) 
-        {
+    if (mysqli_num_rows($executeQuery) > 0) {
+        while ($getValues = mysqli_fetch_array($executeQuery)) {
             $databack .= $getValues[$column] . ",";
         }
         
@@ -99,40 +91,36 @@ function getManyByValue($table, $column, $arguments)
     }
 }
 
-function sendMessageLive($phoneNumber,$message)
+function sendMessageLive($phoneNumber, $message)
 {
     require_once('AfricasTalkingGateway.php');
     $username   = "amaina";
     $apikey     = "03591223d8bb42724274df7525e35a0e486f0067e197cdde5b03761851a4bd90";
     $recipients = $phoneNumber;
     $message    = $message;
-    $from = "20880";
+    $from       = "20880";
     $gateway    = new AfricasTalkingGateway($username, $apikey);
-    try 
-    {
+    try {
         $results = $gateway->sendMessage($recipients, $message, $from);
     }
-        catch ( AfricasTalkingGatewayException $e )
-    {
-        echo "END Encountered an error while sending: ".$e->getMessage();
+    catch (AfricasTalkingGatewayException $e) {
+        echo "END Encountered an error while sending: " . $e->getMessage();
     }
 }
-function sendMessage($phoneNumber,$message)
+function sendMessage($phoneNumber, $message)
 {
     require_once('AfricasTalkingGateway.php');
     $username   = "sandbox";
     $apikey     = "12b82348c95eeb2e1fac5fe36d5f20c5e5f55140950bb348a19b53632a497d38";
     $recipients = $phoneNumber;
     $message    = $message;
-    $from = "tappsRide";
+    $from       = "tappsRide";
     $gateway    = new AfricasTalkingGateway($username, $apikey);
-    try 
-    {
+    try {
         $results = $gateway->sendMessage($recipients, $message, $from);
     }
-        catch ( AfricasTalkingGatewayException $e )
-    {
-        echo "END Encountered an error while sending: ".$e->getMessage();
+    catch (AfricasTalkingGatewayException $e) {
+        echo "END Encountered an error while sending: " . $e->getMessage();
     }
 }
 
@@ -146,7 +134,7 @@ function exitUssd()
 
 function AdminWelcomeScreen()
 {
-    $response  = "CON Welcome to Tapps Ride\n";
+    $response = "CON Welcome to Tapps Ride\n";
     $response .= "Please choose an option\n";
     $response .= "1. Add driver\n";
     $response .= "2. Delete driver\n";
@@ -156,17 +144,17 @@ function AdminWelcomeScreen()
 }
 function AddDriverName()
 {
-    $response  = "CON Enter Driver name\n";
+    $response = "CON Enter Driver name\n";
     return $response;
 }
 function AddDriverNumber()
 {
-    $response  = "CON Enter Driver number\n";
+    $response = "CON Enter Driver number\n";
     return $response;
 }
 function deleteDriverMenu()
 {
-    $response  = "CON Enter driver number\n";
+    $response = "CON Enter driver number\n";
     return $response;
 }
 function AdminPasswordScreen()
@@ -179,15 +167,15 @@ function AdminNameScreen()
     $response = "CON Enter your name\n";
     return $response;
 }
-function driverWelcomeScreen($name,$table, $column,$numberargs)//edit for current location
+function driverWelcomeScreen($name, $table, $column, $numberargs) //edit for current location
 {
-    $response  = "CON Welcome $name\n";
+    $response = "CON Welcome $name\n";
     $response .= "Please choose an option\n";
     $response .= "1. Edit location\n";
     $response .= "2. Start trip\n";
     $response .= "3. End trip\n";
-    if (getByValue($table, $column, $numberargs)==0){
-        $response .= "4. Edit status\n";//can only edit if at 0.
+    if (getByValue($table, $column, $numberargs) == 0) {
+        $response .= "4. Edit status\n"; //can only edit if at 0.
     }
     $response .= "5. Check location\n";
     $response .= "6. Exit";
@@ -195,18 +183,18 @@ function driverWelcomeScreen($name,$table, $column,$numberargs)//edit for curren
 }
 function driverEditLocation()
 {
-    $response  = "CON Enter location\n";
+    $response = "CON Enter location\n";
     return $response;
 }
 function driverEditStatus()
 {
-    $response  = "CON 1. Offline\n";
+    $response = "CON 1. Offline\n";
     $response .= "2. Online";
     return $response;
 }
 function riderWelcomeScreen()
 {
-    $response  = "CON Welcome to Tapps Ride\n";
+    $response = "CON Welcome to Tapps Ride\n";
     $response .= "Please choose an option\n";
     $response .= "1. Request a ride\n";
     $response .= "2. Exit";
@@ -214,18 +202,21 @@ function riderWelcomeScreen()
 }
 function riderLocationScreen()
 {
-    $response  = "CON Enter location\n";
+    $response = "CON Enter location\n";
     return $response;
 }
-function minTripsnum($tripsArgs){
-    $numTrips = array();
-    $tripArray = array();
+function minTripsnum($tripsArgs)
+{
+    $numTrips   = array();
+    $tripArray  = array();
     $drivernums = getManyByValue('drivers', 'phonenumber', $tripsArgs);
-    foreach($drivernums as $number){
-        $tripsCount = array('phonenumber'=>$number);
-        $trips = getByValue('drivers','trips',$tripsCount);
+    foreach ($drivernums as $number) {
+        $tripsCount = array(
+            'phonenumber' => $number
+        );
+        $trips      = getByValue('drivers', 'trips', $tripsCount);
         array_push($tripArray, $trips);
-        $numTrips [$trips]=$number;
+        $numTrips[$trips] = $number;
     }
     $minTrip = min($tripArray);
     return $numTrips[$minTrip];
@@ -234,77 +225,67 @@ function closestDriver($currentLocation, $driverLocation)
 {
     //Our starting point/current location.
     $rawstart = $currentLocation;
-    $start = "$rawstart,Nairobi, Kenya";
+    $start    = "$rawstart,Nairobi, Kenya";
     $distance = array();
-    $locName = array();
-    foreach($driverLocation as $location){
+    $locName  = array();
+    foreach ($driverLocation as $location) {
         $destination = "$location, Nairobi, Kenya";
         //The Google Directions API URL. Do not change this.
         //key = AIzaSyBsz4l9f7T4QOP6atqN8_eYJKhVcmWn4l8
-        $apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBsz4l9f7T4QOP6atqN8_eYJKhVcmWn4l8';
+        $apiUrl      = 'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBsz4l9f7T4QOP6atqN8_eYJKhVcmWn4l8';
         //Construct the URL that we will visit with cURL.
-        $url = $apiUrl . '&' . 'origin=' . urlencode($start) . '&destination=' . urlencode($destination);
+        $url         = $apiUrl . '&' . 'origin=' . urlencode($start) . '&destination=' . urlencode($destination);
         //Initiate cURL.
-        $curl = curl_init($url);
+        $curl        = curl_init($url);
         //Tell cURL that we want to return the data.
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         //Execute the request.
         $res = curl_exec($curl);
         //If something went wrong with the request.
-        if(curl_errno($curl)){
+        if (curl_errno($curl)) {
             throw new Exception(curl_error($curl));
         }
         //Close the cURL handle.
         curl_close($curl);
         //Decode the JSON data we received.
-        $json = json_decode(trim($res), true);
+        $json          = json_decode(trim($res), true);
         //Automatically select the first route that Google gave us.
-        $route = $json['routes'][0];
+        $route         = $json['routes'][0];
         //Loop through the "legs" in our route and add up the distances.
         $totalDistance = 0;
-        foreach($route['legs'] as $leg){
+        foreach ($route['legs'] as $leg) {
             $totalDistance = $totalDistance + $leg['distance']['value'];
             array_push($distance, $totalDistance);
             $locName[$totalDistance] = $location;
         }
-        $closestDrvraw = min ($distance);
+        $closestDrvraw = min($distance);
         //Divide by 1000 to get the distance in KM.
         $closestDriver = round($closestDrvraw / 1000);
-        }
-        $response = array();
-        $result = "$closestDriver KM";
-        $locationName = $locName[$closestDrvraw];
-        $argsloc = array('location'=>$locationName);
-        $driverNum = minTripsnum($argsloc);
-        array_push($response,$result,$locationName,$driverNum);
-        return $response;
-}
-function closestDriverDetails($distance,$location,$phone){
-    $response = "CON You are $distance from the closest driver\n";
-    $response.= "Driver location $location\n";
-    $response.= "Driver number $phone\n";
-    $response.= "1. Confirm request\n";
-    $response.= "2. Exit\n";
+    }
+    $response     = array();
+    $result       = "$closestDriver KM";
+    $locationName = $locName[$closestDrvraw];
+    $argsloc      = array(
+        'location' => $locationName
+    );
+    $driverNum    = minTripsnum($argsloc);
+    array_push($response, $result, $locationName, $driverNum);
     return $response;
 }
-function checkMessages(){
+function closestDriverDetails($distance, $location, $phone)
+{
+    $response = "CON You are $distance from the closest driver\n";
+    $response .= "Driver location $location\n";
+    $response .= "Driver number $phone\n";
+    $response .= "1. Confirm request\n";
+    $response .= "2. Exit\n";
+    return $response;
+}
+function checkMessages()
+{
     $response = "END The driver has been notified check your inbox for details";
     return $response;
 }
 
-// $data = getAll('tablename', 'id');
-
-// <table>
-
-
-
-// foreach($data as $singleId){
-//     $arrayName = array('id' => $singleId);
-
-//     $amount = getByValue('tablename','amount', $arrayName);
-//     $trip = getByValue('tablename','trip', $arrayName);
-
-//     // display
-//     <td><?php echo $amount; 
 
 ?>
