@@ -46,12 +46,8 @@ function returnArrayOfAllTable($table, $column, $order)
         return substr($feedback, 0, -1);
     } else {
         return "0";
-    }
-    
+    }    
 }
-
-
-
 function getAll($table, $column)
 {
     global $conn;
@@ -128,13 +124,13 @@ function sendMessage($phoneNumber, $message)
 
 function exitUssd()
 {
-    $response = "END Thank-you for choosing Tapps Ride goodbye.";
+    $response = "END Thank-you for choosing Tellaride goodbye.";
     return $response;
 }
 
 function AdminWelcomeScreen()
 {
-    $response = "CON Welcome to Tapps Ride\n";
+    $response = "CON Welcome to Tellaride\n";
     $response .= "Please choose an option\n";
     $response .= "1. Add driver\n";
     $response .= "2. Delete driver\n";
@@ -194,7 +190,7 @@ function driverEditStatus()
 }
 function riderWelcomeScreen()
 {
-    $response = "CON Welcome to Tapps Ride\n";
+    $response = "CON Welcome to Tellaride\n";
     $response .= "Please choose an option\n";
     $response .= "1. Request a ride\n";
     $response .= "2. Exit";
@@ -203,6 +199,11 @@ function riderWelcomeScreen()
 function riderLocationScreen()
 {
     $response = "CON Enter location\n";
+    return $response;
+}
+function riderDestinationScreen()
+{
+    $response = "CON Enter destination\n";
     return $response;
 }
 function minTripsnum($tripsArgs)
@@ -272,11 +273,37 @@ function closestDriver($currentLocation, $driverLocation)
     array_push($response, $result, $locationName, $driverNum);
     return $response;
 }
-function closestDriverDetails($distance, $location, $phone)
+function duration($start, $endLocation){
+    $end = "$endLocation, Nairobi, Kenya";
+    $start = "$start, Nairobi, Kenya";
+    $duration = array();
+    $time=time();
+    $apiUrl = 'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBsz4l9f7T4QOP6atqN8_eYJKhVcmWn4l8';
+    $url = $apiUrl . '&' . 'origin=' . urlencode($start) . '&destination=' . urlencode($end) . '&departure_time=' . urldecode($time) . '&travelMode=google.maps.TravelMode.DRIVING&drivingOptions=trafficModel:google.maps.TrafficModel.BEST_GUESS';
+    $curl = curl_init($url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $res = curl_exec($curl);
+    if(curl_errno($curl)){
+        throw new Exception(curl_error($curl));
+    }
+    curl_close($curl);
+    $json = json_decode(trim($res), true);
+    $routes = $json;
+    $route = $json['routes'][0];
+    $totalDuration = 0;
+    foreach($route['legs'] as $leg){
+        $totalDuration = $totalDuration + $leg['duration_in_traffic']['value'];
+        $timeformatted = round($totalDuration/60)." Min";
+        array_push($duration,"$timeformatted");
+    }
+    return $timeformatted;
+}
+function closestDriverDetails($distance, $location, $phone,$duration)
 {
     $response = "CON You are $distance from the closest driver\n";
     $response .= "Driver location $location\n";
     $response .= "Driver number $phone\n";
+    $response .= "Ride duration $duration\n";
     $response .= "1. Confirm request\n";
     $response .= "2. Exit\n";
     return $response;
@@ -286,6 +313,4 @@ function checkMessages()
     $response = "END The driver has been notified check your inbox for details";
     return $response;
 }
-
-
 ?>

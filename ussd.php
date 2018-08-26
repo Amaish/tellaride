@@ -377,18 +377,39 @@ riderlvl_1:
                 if (empty($userResponse)) {
                     $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);
-                    $response = "END Invalid entry";
+                    $response = "END Invalid entry try again";
                 } else {
                     $sqlLev3 = "UPDATE `session_levels` SET `level` = '3' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev3);
+                    $sqlstartsession = "INSERT INTO `riders` (`session_id`,`start`) VALUES ('$sessionId','$userResponse')";
+                    $conn->query($sqlstartsession);
+                    $response = riderDestinationScreen();
+                }
+                break;
+            case 3:
+                if (empty($userResponse)) {
+                    $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlLev0);
+                    $response = "END Invalid entry";
+                } else {
+                    $sqlLev4 = "UPDATE `session_levels` SET `level` = '4' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlLev4);
+                    $sqlstop = "UPDATE `riders` SET `destination` = '$userResponse' WHERE `session_id`='$sessionId'";
+                    $conn->query($sqlstop);
                     $args            = array(
                         'status' => '0'
                     );
+                    $dbargs            = array(
+                        'session_id' => $sessionId
+                    );
+                    $start           = getByValue('riders', 'start', $dbargs);
+                    $destination     = getByValue('riders', 'destination', $dbargs);
                     $driverLocations = getManyByValue('drivers', 'location', $args);
-                    $driverDetails   = closestDriver($userResponse, $driverLocations);
+                    $driverDetails   = closestDriver($start, $driverLocations);
                     $distance        = $driverDetails[0];
                     $location        = $driverDetails[1];
                     $phone           = $driverDetails[2];
+                    $duration        = duration($start, $destination);
                     $drvNameFetch    = array(
                         'phonenumber' => $phone
                     );
@@ -396,17 +417,12 @@ riderlvl_1:
                     $drvCheck        = array(
                         'drivernumber' => $phone
                     );
-                    if (returnExists('riders', $drvCheck) == 0) {
-                        $sqldrvLevelset = "INSERT INTO `riders` (`session_id`,`drivernumber`,`drivername`,`location`,`distance`) VALUES ('$sessionId','$phone','$drivername','$location','$distance')";
-                        $conn->query($sqldrvLevelset);
-                    } else {
-                        $sqlupdate = "UPDATE `riders` SET `session_id`='$sessionId',`drivername` = '$drivername',`location`= '$location',`distance`='$distance' WHERE `drivernumber`='$phone'";
-                        $conn->query($sqlupdate);
-                    }
-                    $response = closestDriverDetails($distance, $location, $phone);
+                    $sqlupdate = "UPDATE `riders` SET `drivername` = '$drivername',`location`= '$location',`distance`='$distance',`drivernumber`='$phone' WHERE `session_id`='$sessionId'";
+                    $conn->query($sqlupdate);
+                    $response = closestDriverDetails($distance, $location, $phone, $duration);
                 }
                 break;
-            case 3;
+            case 4;
                 if (empty($userResponse)) {
                     $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);

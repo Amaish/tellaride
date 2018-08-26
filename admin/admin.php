@@ -7,7 +7,7 @@ include_once($_SERVER["DOCUMENT_ROOT"] . '/tappsRide/core.php');
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $adminName; ?> - Admin Dashboard</title>
+	<title><?php echo $adminName;?> - Admin Dashboard</title>
 	<meta content="Tappsride" name="description">
 	<meta content="width=device-width,initial-scale=1,maximum-scale=1,minimal-ui" name="viewport">
 	<meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -84,6 +84,8 @@ include_once($_SERVER["DOCUMENT_ROOT"] . '/tappsRide/core.php');
 													         <th>Reg Number</th>
 													         <th>Engine Size</th>
 													         <th>No. of Trips</th>
+															 <th>Status</th>
+															 <th>Location</th>
 													         <th>Action</th>
 													      </tr>
 													   </thead>
@@ -103,6 +105,8 @@ include_once($_SERVER["DOCUMENT_ROOT"] . '/tappsRide/core.php');
 													        <td><?php echo getByValue('drivers', 'regno', $args); ?></td>
 													        <td><?php echo getByValue('drivers', 'engineSize', $args); ?></td>
 													        <td><?php echo getByValue('drivers', 'trips', $args); ?></td>
+															<td><?php echo getByValue('drivers', 'status', $args); ?></td>
+															<td><?php echo getByValue('drivers', 'location', $args); ?></td>
 													        <td>
 												                <div class="btn-group dropdown">
 												                   
@@ -134,6 +138,12 @@ include_once($_SERVER["DOCUMENT_ROOT"] . '/tappsRide/core.php');
 																		</div>
 																		<div class="md-form-group">
 																			<input class="md-input" value="<?php echo getByValue('drivers', 'engineSize', $args); ?>" id="e_engineSize_<?php echo $each_driver; ?>" placeholder="Engine Size"><label></label>
+																		</div>
+																		<div class="md-form-group">
+																			<input class="md-input" value="<?php echo getByValue('drivers', 'location', $args); ?>" id="e_location_<?php echo $each_driver; ?>" placeholder="location"><label></label>
+																		</div>
+																		<div class="md-form-group">
+																			<input class="md-input" value="<?php echo getByValue('drivers', 'status', $args); ?>" id="e_status_<?php echo $each_driver; ?>" placeholder="status"><label></label>
 																		</div>
 																		<p id="editresponse<?php echo $each_driver; ?>"></p>
 																	</div>

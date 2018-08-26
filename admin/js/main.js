@@ -78,15 +78,20 @@ $(document).ready(function($) {
         var phone      = $("#e_phone_"+driverid).val();
         var regno      = $("#e_regno_"+driverid).val();
         var enginesize = $("#e_engineSize_"+driverid).val();
-
+        var location   = $("#e_location_"+driverid).val();
+        var status     = $("#e_status_"+driverid).val();
+        
         $.post('system/editdriver/', 
         {
             driverid:driverid,
             name:name,
             phone:phone,
             regno:regno,
-            enginesize:enginesize
+            enginesize:enginesize,
+            location:location,
+            status:status
         }, 
+        
         function(data, textStatus, xhr) {
             if (data == 1) {
                 swal({

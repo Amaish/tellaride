@@ -16,21 +16,21 @@
          color: #000000;
          height:100%;
          width:100%;
-         background:#00a848;
-         background: linear-gradient(to bottom right,#00642b, #00a848, #00642b);
+         background:#f2f2f2;
+         background: linear-gradient(to bottom right,#d8d8d8, #f2f2f2, #d8d8d8);
          }
          section{
          height:100%;
          width:100%;
-         background:#00a848;
-         background: linear-gradient(to bottom right,#00642b, #00a848, #00642b);
+         background:#f2f2f2;
+         background: linear-gradient(to bottom right,#d8d8d8, #f2f2f2, #d8d8d8);
          }
          ::-webkit-scrollbar { 
          display: none; 
          }
          .center {
-         background:#f01830;
-         background: linear-gradient(to bottom right,#900e1c, #f01830, #900e1c);
+            background:#cccccc;
+         background: linear-gradient(to bottom right,#666666, #cccccc, #666666);
          margin-bottom: 5%;
          margin-left: 0px;
          padding-left: 0.5%;
@@ -39,17 +39,17 @@
          padding-top: 0.5%;
          }
          .center2 {
-         background:#66ca91;
-         background: linear-gradient(to bottom right,#00a848, #66ca91, #00a848);
-         margin-bottom: 11.5%;
+         background:#d8d8d8;
+         background: linear-gradient(to bottom right,#cccccc, #d8d8d8, #cccccc);
+         margin-bottom: 13.5%;
          margin-top: 10%;
          margin-left: 33%;
          width: 30%;
          padding-bottom: 2%;
          }
          .bt-c{
-         background:#f01830;
-         background: linear-gradient(to bottom right,#900e1c, #f01830, #900e1c);
+         background:#7f7f7f;
+         background: linear-gradient(to bottom right,#333333, #7f7f7f, #333333);
          }
          .border-top{
          border-top: 1px solid #848c91;
@@ -58,8 +58,8 @@
          padding-top:1%;
          }
          .header{
-         background:#f01830;
-         background: linear-gradient(to bottom right,#900e1c, #f01830, #900e1c);
+            background:#7f7f7f;
+         background: linear-gradient(to bottom right,#333333, #7f7f7f, #333333);
          width: 100%;
          padding-bottom: 2%;
          }
@@ -77,8 +77,8 @@
          border-radius: 5px 5px 0px 0px;
          }
          .footer{
-         background:#66ca91;
-         background: linear-gradient(to bottom right,#00a848, #66ca91, #00a848);
+         background:#ffffff;
+         background: linear-gradient(to bottom right,#e5e5e5, #ffffff, #e5e5e5);
          }
       </style>
    </head>
@@ -108,11 +108,8 @@
                   <div >
                      <p id="lsresp"></p>
                   </div>
-                  <div class = "padding" style = "padding-top: 5%;">
+                  <div class = "padding" style = "padding-top: 5%; padding-bottom: 6%;">
                      <button id="signinadmin" class="btn btn-block bt-c" style = "color: #333;">Sign in</button>
-                     <a href="#">
-                        <p style = "color: #333; padding-top: 4%; padding-bottom: 2%;"><small>Forgot your password?</small></p>
-                     </a>
                   </div>
                </div>
             </div>
