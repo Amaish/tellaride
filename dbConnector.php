@@ -1,8 +1,8 @@
 <?php
 //theUssdDb.php
 //Connection Credentials
-$servername = '139.59.153.70';
-$username = 'root';
+$servername = "139.59.153.70";
+$username = "root";
 $password = "tellaride1395";
 $database = "tellaride";
     // Create connection
