@@ -2,9 +2,9 @@
 <?php
 //theUssdDb.php
 //Connection Credentials
-$servername = 'localhost';
+$servername = '139.59.153.70';
 $username = 'root';
-$password = "";
+$password = "tellaride1395";
 $database = "tappsRide";
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $database);
