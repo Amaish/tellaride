@@ -13,5 +13,5 @@ $database = "tellaride";
         //log error to file/db $e-getMessage()
         die("END An error was encountered. Please try again later");
     } 
-	echo " END Connected successfully (".$conn->host_info.")";
+	//echo " END Connected successfully (".$conn->host_info.")";
     ?>
