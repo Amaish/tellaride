@@ -273,6 +273,56 @@ function closestDriver($currentLocation, $driverLocation)
     array_push($response, $result, $locationName, $driverNum);
     return $response;
 }
+function Drivedistance($currentLocation, $location)
+{
+    //Our starting point/current location.
+    $rawstart = $currentLocation;
+    $start    = "$rawstart,Nairobi, Kenya";
+    //$distance = array();
+    //$locName  = array();
+    
+        $destination = "$location, Nairobi, Kenya";
+        //The Google Directions API URL. Do not change this.
+        //key = AIzaSyBsz4l9f7T4QOP6atqN8_eYJKhVcmWn4l8
+        $apiUrl      = 'https://maps.googleapis.com/maps/api/directions/json?key=AIzaSyBsz4l9f7T4QOP6atqN8_eYJKhVcmWn4l8';
+        //Construct the URL that we will visit with cURL.
+        $url         = $apiUrl . '&' . 'origin=' . urlencode($start) . '&destination=' . urlencode($destination);
+        //Initiate cURL.
+        $curl        = curl_init($url);
+        //Tell cURL that we want to return the data.
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        //Execute the request.
+        $res = curl_exec($curl);
+        //If something went wrong with the request.
+        if (curl_errno($curl)) {
+            throw new Exception(curl_error($curl));
+        }
+        //Close the cURL handle.
+        curl_close($curl);
+        //Decode the JSON data we received.
+        $json          = json_decode(trim($res), true);
+        //Automatically select the first route that Google gave us.
+        $route         = $json['routes'][0];
+        //Loop through the "legs" in our route and add up the distances.
+        $totalDistance = 0;
+        foreach ($route['legs'] as $leg) {
+            $totalDistance = $totalDistance + $leg['distance']['value'];
+            //array_push($distance, $totalDistance);
+            //$locName[$totalDistance] = $location;
+        }
+        //$closestDrvraw = min($distance);
+        //Divide by 1000 to get the distance in KM.
+        $distance = round($totalDistance / 1000);
+    //$response     = array();
+    $result       = "$distance KM";
+    //$locationName = $locName[$closestDrvraw];
+    // $argsloc      = array(
+    //     'location' => $locationName
+    // );
+    // $driverNum    = minTripsnum($argsloc);
+    // array_push($response, $result, $locationName, $driverNum);
+    return $result;
+}
 function duration($start, $endLocation){
     $end = "$endLocation, Nairobi, Kenya";
     $start = "$start, Nairobi, Kenya";
@@ -298,11 +348,12 @@ function duration($start, $endLocation){
     }
     return $timeformatted;
 }
-function closestDriverDetails($distance, $location, $phone,$duration)
+function closestDriverDetails($distance, $location, $phone,$duration, $drivedistance)
 {
     $response = "CON You are $distance from the closest driver\n";
     $response .= "Driver location $location\n";
     $response .= "Driver number $phone\n";
+    $response .= "Ride distance $drivedistance\n";
     $response .= "Ride duration $duration\n";
     $response .= "1. Confirm request\n";
     $response .= "2. Exit\n";

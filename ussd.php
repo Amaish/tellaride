@@ -370,14 +370,14 @@ riderlvl_1:
                 } else {
                     $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);
-                    $response = "END Invalid entry try again.";
+                    $response = "END Error occured try again.";
                 }
                 break;
             case 2:
                 if (empty($userResponse)) {
                     $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);
-                    $response = "END Invalid entry try again";
+                    $response = "END Error occured try again";
                 } else {
                     $sqlLev3 = "UPDATE `session_levels` SET `level` = '3' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev3);
@@ -390,7 +390,7 @@ riderlvl_1:
                 if (empty($userResponse)) {
                     $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);
-                    $response = "END Invalid entry";
+                    $response = "END Error occured try again";
                 } else {
                     $sqlLev4 = "UPDATE `session_levels` SET `level` = '4' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev4);
@@ -410,12 +410,13 @@ riderlvl_1:
                         $response = "END No registered drivers";
                         }
                     $driverLocations = getManyByValue('drivers', 'location', $args);
-                   // print_r($driverLocations);
                     $driverDetails   = closestDriver($start, $driverLocations);
+                    $driveDistance   = Drivedistance($start, $destination);
                     $distance        = $driverDetails[0];
                     $location        = $driverDetails[1];
                     $phone           = $driverDetails[2];
                     $duration        = duration($start, $destination);
+                    $drivedistance   = $driveDistance;
                     $drvNameFetch    = array(
                         'phonenumber' => $phone
                     );
@@ -423,9 +424,9 @@ riderlvl_1:
                     $drvCheck        = array(
                         'drivernumber' => $phone
                     );
-                    $sqlupdate = "UPDATE `riders` SET `drivername` = '$drivername',`location`= '$location',`distance`='$distance',`drivernumber`='$phone' WHERE `session_id`='$sessionId'";
+                    $sqlupdate = "UPDATE `riders` SET `drivername` = '$drivername',`location`= '$location',`distance`='$distance',`drivernumber`='$phone',`drivelength`='$drivedistance',`duration`='$duration' WHERE `session_id`='$sessionId'";
                     $conn->query($sqlupdate);
-                    $response = closestDriverDetails($distance, $location, $phone, $duration);
+                    $response = closestDriverDetails($distance, $location, $phone, $duration, $drivedistance);
                  }
                 break;
             case 4;
@@ -441,6 +442,8 @@ riderlvl_1:
                         $location   = getByValue('riders', 'location', $drvFetch);
                         $drivername = getByValue('riders', 'drivername', $drvFetch);
                         $phone      = getByValue('riders', 'drivernumber', $drvFetch);
+                        $travelDistance = getByValue('riders', 'drivelength', $drvFetch);
+                        $driveDuration = getByValue('riders', 'duration', $drvFetch);
                         $sqlrequest = "UPDATE `drivers` SET `status` = '3' WHERE `phonenumber` = '$phone'";
                         $conn->query($sqlrequest);
                         $drvMessage = "You have been requested for a ride kindly contact the passenger through the number $phoneNumber";
@@ -452,7 +455,7 @@ riderlvl_1:
                         $newtrip      = $trip + 1;
                         $sqltrip      = "UPDATE `drivers` SET `trips` = '$newtrip' WHERE `phonenumber` = '$phone'";
                         $conn->query($sqltrip);
-                        $message = "Driver has been notified\n Driver name $drivername\n Location $location\n Phone Number $phone\n Distance $distance\n $drivername will contact you shortly.";
+                        $message = "Driver has been notified\nDriver name: $drivername\nLocation: $location\nPhone Number: $phone\nTrip length: $travelDistance\nTrip duration: $driveDuration\n$drivername will contact you shortly.";
                         sendMessage($phoneNumber, $message);
                         $response = checkMessages();
                     } else if ($userResponse == "2") {
