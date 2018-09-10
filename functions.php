@@ -224,6 +224,7 @@ function minTripsnum($tripsArgs)
 }
 function closestDriver($currentLocation, $driverLocation)
 {
+    //print_r($driverLocation);
     //Our starting point/current location.
     $rawstart = $currentLocation;
     $start    = "$rawstart,Nairobi, Kenya";

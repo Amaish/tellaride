@@ -409,7 +409,12 @@ riderlvl_1:
                         $conn->query($sqlLev0);
                         $response = "END No registered drivers";
                         }
-                    $driverLocations = getManyByValue('drivers', 'location', $args);
+                $driverLocations = getManyByValue('drivers', 'location', $args);
+                if($driverLocations=="No Data Found"){
+                    $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
+                    $conn->query($sqlLev0);
+                    die("END No drivers available at the moment.\nPlease try again later.");
+                }
                     $driverDetails   = closestDriver($start, $driverLocations);
                     $driveDistance   = Drivedistance($start, $destination);
                     $distance        = $driverDetails[0];
@@ -446,7 +451,7 @@ riderlvl_1:
                         $driveDuration = getByValue('riders', 'duration', $drvFetch);
                         $sqlrequest = "UPDATE `drivers` SET `status` = '3' WHERE `phonenumber` = '$phone'";
                         $conn->query($sqlrequest);
-                        $drvMessage = "You have been requested for a ride kindly contact the passenger through the number $phoneNumber";
+                        $drvMessage = "You have been requested for a ride kindly contact the passenger through the number $phoneNumber\nDial *421# to start your trip\n";
                         sendMessage($phone, $drvMessage);
                         $drvNameFetch = array(
                             'phonenumber' => $phone
@@ -455,7 +460,24 @@ riderlvl_1:
                         $newtrip      = $trip + 1;
                         $sqltrip      = "UPDATE `drivers` SET `trips` = '$newtrip' WHERE `phonenumber` = '$phone'";
                         $conn->query($sqltrip);
-                        $message = "Driver has been notified\nDriver name: $drivername\nLocation: $location\nPhone Number: $phone\nTrip length: $travelDistance\nTrip duration: $driveDuration\n$drivername will contact you shortly.";
+                        $cost = array();
+                        $costforKM = $travelDistance * 38;
+                        $costfortime = $driveDuration * 3;
+                        array_push($cost,$costforKM,$costfortime);
+                        if (max($cost<=250)){
+                            $tripcost = 250;
+                        }
+                        else{
+                            if (min($cost)<250){
+                                $mincost = 250;
+                            }
+                            else{
+                                $mincost = min($cost);
+                            }
+                            $maxcost = max($cost);
+                            $tripcost = "Between $mincost and $maxcost";
+                        }
+                        $message = "Driver name: $drivername\nLocation: $location\nPhone Number: $phone\nTrip length: $travelDistance\nTrip duration: $driveDuration\nTrip cost: $tripcost\n$drivername will contact you shortly.";
                         sendMessage($phoneNumber, $message);
                         $response = checkMessages();
                     } else if ($userResponse == "2") {
