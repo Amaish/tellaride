@@ -475,9 +475,9 @@ riderlvl_1:
                                 $mincost = min($cost);
                             }
                             $maxcost = max($cost);
-                            $tripcost = "Between $mincost and $maxcost";
+                            $tripcost = "$mincost - $maxcost";
                         }
-                        $message = "Driver name: $drivername\nLocation: $location\nPhone Number: $phone\nTrip length: $travelDistance\nTrip duration: $driveDuration\nTrip cost: $tripcost\n$drivername will contact you shortly.";
+                        $message = "Driver: $drivername\nLocation: $location\nPhone No.: $phone\nTrip length: $travelDistance\nTrip duration: $driveDuration\nTrip cost: $tripcost KES\n$drivername will call you shortly.";
                         sendMessage($phoneNumber, $message);
                         $response = checkMessages();
                     } else if ($userResponse == "2") {
