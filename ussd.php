@@ -6,6 +6,10 @@ if (!empty($_POST)) {
     $serviceCode = $_POST['serviceCode'];
     $phoneNumber = $_POST['phoneNumber'];
     $text        = $_POST['text'];
+
+    $response = "END You have reached tellaride.\n Our services will start on Wednesday 19th\n";
+
+    /*
     
     $textArray    = explode('*', $text);
     $userResponse = trim(END($textArray));
@@ -498,6 +502,7 @@ riderlvl_1:
                 break;
         }
     }
+    */
     
     header('Content-type: text/plain');
     echo $response;
