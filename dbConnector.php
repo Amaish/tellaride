@@ -2,8 +2,8 @@
 //theUssdDb.php
 //Connection Credentials
 $servername = "127.0.0.1";
-$username = "root";
-//$password = "Tell@ride1395";
+//$username = "root";
+$password = "Tell@ride1395";
 $password = "";
 $database = "tappsRide";
     // Create connection
