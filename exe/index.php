@@ -49,7 +49,7 @@ class SignInAdmin
             $encpassword   = sha1($this->password);
             
             // validate information to avoid duplicates
-            $adminNumber = array('phonenumber' => $formated_phone, 'password' => $encpassword);
+            $adminNumber = array('phonenumber' => $formated_phone);
         
             if(returnExists('admin', $adminNumber) == 0){
                 die('Invalid Phone Number and password');
