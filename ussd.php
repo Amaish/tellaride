@@ -7,8 +7,6 @@ if (!empty($_POST)) {
     $phoneNumber = $_POST['phoneNumber'];
     $text        = $_POST['text'];
 
-    $response = "END You have reached tellaride.\n Our services will start on Wednesday 19th\n";
-
         
     $textArray    = explode('*', $text);
     $userResponse = trim(END($textArray));
