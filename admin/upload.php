@@ -97,11 +97,11 @@ if (isset($_POST["submit"])) {
         $file = fopen($filename, "r");
         while (($emapData = fgetcsv($file, 100000, ",")) !== FALSE) {
             if (!empty($emapData[0]) AND !empty($emapData[1]) AND !empty($emapData[2]) AND !empty($emapData[3])) {
-                if (strpos($emapData[1], '0') == 0) {
+                if (strpos($emapData[1], '0') == 0 && strlen($emapData[1])==10) {                    
                     $phone     = "+254" . substr($emapData[1], -9);
                     $arguments = array(
                         'phonenumber' => $phone
-                    );
+                    );                    
                     if (returnExists('drivers', $arguments) == 0) {
                         $name         = trim($emapData[0]);
                         $phonenumbers = $phone;
@@ -133,7 +133,7 @@ if (isset($_POST["submit"])) {
                         </a>';
                     }
                     
-                } else if (strpos($emapData[1], '7') == 0) {
+                } else if (strpos($emapData[1], '7') == 0 && strlen($emapData[1])==9) {
                     $phone     = "+254" . $emapData[1];
                     $arguments = array(
                         'phonenumber' => $phone
@@ -161,14 +161,15 @@ if (isset($_POST["submit"])) {
                                 </span> Something went wrong adding driver <b>' . $emapData[0] . ', ' . $emapData[1] . '</b> 
                             </a>';
                         }
-                    } else {
+                    } 
+                    else {
                         echo '<a class="list-group-item text-danger" href="#">
                                     <span class="pull-right text-danger">
                                         <i class="ion-close-circled text-xs"></i>
                                     </span> The driver <b>' . $emapData[0] . ', ' . $emapData[1] . '</b> already exists
                             </a>';
                     }
-                } else if (strpos($emapData[1], '+') == 0) {
+                } else if (strpos($emapData[1], '+') == 0&& strlen($emapData[1])==13) {
                     
                     $arguments = array(
                         'phonenumber' => $emapData[1]
@@ -209,14 +210,14 @@ if (isset($_POST["submit"])) {
                     echo '<a class="list-group-item text-danger" href="#">
                                         <span class="pull-right text-danger">
                                             <i class="ion-close-circled text-xs"></i>
-                                        </span> The phone number <b>' . $emapData[0] . ', ' . $emapData[1] . '</b> Is invalid
+                                        </span> The phone number for <b>' . $emapData[0] . ', ' . $emapData[1] . '</b> Is invalid
                     </a>';
                 }
             } else {
                 echo '<a class="list-group-item text-danger" href="#">
                                         <span class="pull-right text-danger">
                                             <i class="ion-close-circled text-xs"></i>
-                                        </span>Please provide a name, phone number, car registration number and engine size
+                                        </span> 1 Please provide a name, phone number, car registration number and engine size
                 </a>';
             }
         }
