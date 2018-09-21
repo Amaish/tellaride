@@ -31,6 +31,10 @@
         ::-webkit-scrollbar {
             display: none;
         }
+        .color{
+            background: #c4c8c8;
+            background: linear-gradient(to right, #d5d8d8, #c4c8c8, #d5d8d8);
+        }
         
         .head1 {
             background: #eff6fa;
@@ -41,6 +45,18 @@
             background: #eff6fa;
             background: linear-gradient(to right, #e0eef6, #eff6fa, #e0eef6);
         }
+        .b-t-l-r{
+         border-top-left-radius: 2%;            
+         }
+         .b-t-r-r{
+         border-top-right-radius: 2%;
+         }
+         .b-b-r-r{
+         border-bottom-right-radius: 2%;
+         }
+         .b-b-l-r{
+         border-bottom-left-radius: 2%;
+         }
         
         #footer {
             position: relative;
@@ -52,27 +68,27 @@
 
 <body >
     <section id="backgroundBody" style="margin:0 auto; padding-top: 3%; height: auto;">
-        <div class="row" style="height: 83%; width: 80%; margin: 0 auto; box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2);">
+        <div class="row b-b-r-r b-t-r-r b-t-l-r b-b-l-r" style="height: 83%; width: 80%; margin: 0 auto; box-shadow: 0 8px 17px rgba(0, 0, 0, 0.2);">
             <div >
-                  <div class="col-md-6 text-primary text-center ">
-                  <div style="padding-top: 15%;">
-                  <b> <h1>Tapps Ride</h1> </b>
+                  <div class="b-t-l-r b-b-l-r col-md-6 text-primary text-center ">
+                  <div style="padding-top: 10%;padding-bottom: 10%;">
+                  <b> <h1>Tellaride</h1> </b>
                   </div>
-                  <a><img class="displayed " src="../admin/images/mainlogo4.ico" style="padding-top: 5%; padding-bottom: 5%;" alt="logo" /></a><br>
+                  <a><img class="displayed " src="../admin/images/mainlogo4.ico" style="padding-bottom: 5%;" alt="logo" /></a><br>
                   <footer class="text-primary" id="footer">
-                  <p><small> &copy;Tapps Ride, all rights reserved<?php
+                  <p><small> &copy;Tellaride, all rights reserved<?php
                         echo date(" Y");
                         ?>.</small></p>
                   </footer>
                   </div>
-                  <div class="col-md-6 text-primary text-center" style="background-color: #c4c8c8; height: 100%;">
+                  <div class="col-md-6 text-primary text-center color b-b-r-r b-t-r-r " style="height: 100%;">
                   <div class="text-center ">
-                        <header style="padding-top: 15%;">
-                              <strong> <h2>Sign in to access admin account</h2></strong>
+                        <header style="padding-top: 10%;padding-bottom: 10%;">
+                              <strong> <h2>Admin Sign in</h2></strong>
                         </header>
                   </div>
                   <div >
-                        <div class="list-group" style="background-color: #c4c8c8; padding-top: 20%; padding-left: 10%; padding-right: 10%;padding-bottom: 5%;">
+                        <div class="list-group b-b-r-r b-t-r-r b-t-l-r b-b-l-r" style="background-color: #c4c8c8; padding-top: 15%; padding-left: 10%; padding-right: 10%;padding-bottom: 5%;height: 55%;">
                               <div class="list-group-item" style="background-color: #f3f4f4;">
                               <input class="form-control no-border" type="text" autocomplete="tel-national" placeholder="Phone Number (07xxxxxxxx)" id="phonenumber">
                               </div>
