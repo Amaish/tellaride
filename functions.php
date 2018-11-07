@@ -91,7 +91,7 @@ function sendMessageLive($phoneNumber, $message)
 {
     require_once('AfricasTalkingGateway.php');
     $username   = "tellaride";
-    $apikey     = "286e5b0bd13321bcfab3b3dc1587e0af3033ec6100f4e1042e305f7acd97f681";
+    $apikey     = "25e4b4fe531bf44d02b2916d065bcf7742cbcb1d4d6c59a64f2a820337f23c22";
     $recipients = $phoneNumber;
     $message    = $message;
     $from       = "TELLARIDE";

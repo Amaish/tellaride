@@ -124,8 +124,8 @@ lvl_1:
                     $drvId    = getByValue('drivers', 'id', $drvFetch);
                     $adminMsg = "You have successfully added a driver\n Name: $drvName\n Tel: $drvNum\n Ref ID: $drvId";
                     $drvMsg   = "You have been added to Tapps Ride as a driver Ref ID: $drvId\n Kindly dial *384*1404# to update your locarion\n";
-                    sendMessageLive($phoneNumber, $adminMsg);
-                    sendMessageLive($drvNum, $drvMsg);
+                    sendMessage($phoneNumber, $adminMsg);
+                    sendMessage($drvNum, $drvMsg);
                     $response = "END Add success";
                     $sqlLev0  = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);
@@ -148,8 +148,8 @@ lvl_1:
                     $sqldeldrv = "DELETE FROM `drivers` WHERE `phonenumber` = '$formated_phone'";
                     $conn->query($sqldeldrv);
                     $response = "END Delete success";
-                    sendMessageLive($phoneNumber, $adminMsg);
-                    sendMessageLive($drvNum, $drvMsg);
+                    sendMessage($phoneNumber, $adminMsg);
+                    sendMessage($drvNum, $drvMsg);
                     $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
                     $conn->query($sqlLev0);
                 }
@@ -453,7 +453,7 @@ riderlvl_1:
                         $sqlrequest = "UPDATE `drivers` SET `status` = '3' WHERE `phonenumber` = '$phone'";
                         $conn->query($sqlrequest);
                         $drvMessage = "You have been requested for a ride kindly contact the passenger through the number $phoneNumber\nDial *421# to start your trip\n";
-                        sendMessageLive($phone, $drvMessage);
+                        sendMessage($phone, $drvMessage);
                         $drvNameFetch = array(
                             'phonenumber' => $phone
                         );
@@ -479,7 +479,7 @@ riderlvl_1:
                             $tripcost = "$mincost - $maxcost";
                         }
                         $message = "Driver: $drivername\nLocation: $location\nPhone No.: $phone\nTrip length: $travelDistance\nTrip duration: $driveDuration\nTrip cost: $tripcost KES\n$drivername will call you shortly.";
-                        sendMessageLive($phoneNumber, $message);
+                        sendMessage($phoneNumber, $message);
                         $response = checkMessages();
                     } else if ($userResponse == "2") {
                         $sqlLev0 = "UPDATE `session_levels` SET `level` = '0' WHERE `phonenumber` = '$phoneNumber'";
