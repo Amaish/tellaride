@@ -3,9 +3,8 @@
 //Connection Credentials
 $servername = "127.0.0.1";
 $username = "root";
-//$password = "Tell@ride1395";
 $password = "";
-$database = "tappsRide";
+$database = "name";
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $database);
     // Check connection
